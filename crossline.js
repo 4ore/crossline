@@ -55,7 +55,8 @@ function clearCanvas(ctx) {
 }
 
 let lines = [];
-let crossDots = [];
+
+let dots = [];
 
 function clearAll() {
   clearCanvas(ctx);
@@ -66,6 +67,13 @@ function draw() {
   clearCanvas(ctx);
   lines.forEach((line) => {
     drawLine(ctx, line);
+  });
+  dots.forEach((dot) => {
+    if (dot != null) {
+      dot.forEach((dotes) => {
+        drawDot(ctx, dotes);
+      });
+    }
   });
 }
 
@@ -94,7 +102,7 @@ function handleMouseDown(e) {
     end: mouse.down,
   };
   lines.push(line);
-
+  dots.push(null);
   draw();
 }
 function handleMuseUp(e) {
@@ -110,10 +118,15 @@ function handleMouseMove(e) {
     };
     lines.pop();
     lines.push(line);
-    draw();
+
+    let crossDot;
+    let crossDots = [];
     if (lines.length > 1) {
+      for (let j = 0; j <= crossDots.length + 1; ++j) {
+        crossDots.pop();
+      }
       for (let i = 0; i < lines.length; ++i) {
-        let crossDot = ifCross(
+        crossDot = ifCross(
           lines[lines.length - 1].start.x,
           lines[lines.length - 1].start.y,
           lines[lines.length - 1].end.x,
@@ -123,16 +136,18 @@ function handleMouseMove(e) {
           lines[i].end.x,
           lines[i].end.y
         );
-
         if (crossDot.xc != null) {
-          crossDots.pop();
+          dots.pop();
           crossDots.push(crossDot);
-          crossDots.forEach((crossDot) => {
-            drawDot(ctx, crossDot);
-          });
+          dots.push(crossDots);
         }
+        crossDots.forEach((crossDot) => {
+          drawDot(ctx, crossDot);
+        });
       }
     }
+    draw();
+    console.log(dots);
   }
 }
 
