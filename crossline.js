@@ -61,6 +61,7 @@ let dots = [];
 function clearAll() {
   clearCanvas(ctx);
   lines = [];
+  dots = [];
 }
 
 function draw() {
